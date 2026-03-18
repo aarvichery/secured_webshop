@@ -3,27 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Shop - Connexion</title>
-    <link rel="stylesheet" href="/css/main.css">
+    <title>Connexion - Secure Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="topbar"></div>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1>Connexion</h1>
-                <p>Placer un formulaire de connexion ici</p>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">Secure Shop</div>
+            <nav class="nav-links">
+                <a href="/">Accueil</a>
+                    <a href="/profile">Profil</a>
+                    <a href="/admin">Admin</a>
+                    <a href="/login" class="active">Connexion</a>
+                    <a href="/register">Inscription</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="login-wrapper">
+        <div class="login-card">
+            <h1>Connexion</h1>
+            <p class="subtitle">Heureux de vous revoir !</p>
+
+            <form action="/api/auth/login" method="POST">
+                <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox"> Se souvenir de moi
+                    </label>
+                    <a href="#" class="forgot-link">Oublié ?</a>
+                </div>
+
+                <button type="submit" class="btn-primary">Se connecter</button>
+            </form>
+
+            <div class="signup-prompt">
+                Pas encore de compte ? <a href="/register">Créer un compte</a>
             </div>
-        </section>
+        </div>
     </main>
 
-    <footer id="contact" class="footer">
-        <div class="container">
-            <p>Projet pedagogique - ETML 183</p>
-        </div>
+    <footer class="footer">
+        <p>Projet pédagogique - ETML 183</p>
     </footer>
 
-    <script src="/js/nav.js"></script>
 </body>
 </html>
+
+<style>
+/* --- Variables de couleurs --- */
+:root {
+    --bg-color: #f8fafc;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --accent: #2563eb;
+    --white: #ffffff;
+    --border: #e2e8f0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Barre de Navigation --- */
+.navbar {
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    margin-left: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--text-main);
+}
+
+/* --- Section Connexion --- */
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.login-card {
+    background: var(--white);
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+h1 {
+    font-size: 1.75rem;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+}
+
+/* --- Formulaire --- */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--accent);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+}
+
+.forgot-link {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--text-main);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.btn-primary:hover {
+    background-color: #000;
+}
+
+/* --- Section S'inscrire --- */
+.signup-prompt {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+.signup-prompt a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* --- Footer --- */
+.footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+</style>
