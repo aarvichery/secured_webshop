@@ -31,7 +31,8 @@ module.exports = {
     // POST /api/auth/register
     // ----------------------------------------------------------
     register: (req, res) => {
-        const { email, password, username, address } = req.body;
+        const { email, password, username, address, nb_street, zip, city } = req.body;
+        const fulladdress = `${nb_street} ${address}, ${zip} ${city}`
 
         if (!email || !password) {
             return res.status(400).json({ error: 'Email et mot de passe requis' });
@@ -49,7 +50,7 @@ module.exports = {
             }
 
             if (results.length === 0) {
-                const search = `INSERT INTO users (username, email, password, role, address, photo_path) VALUES ('${username}', '${email}', '${password}', 'user', '${address}', NULL)`;
+                const search = `INSERT INTO users (username, email, password, role, address, photo_path) VALUES ('${username}', '${email}', '${password}', 'user', '${fulladdress}', NULL)`;
                 db.query(search, (err, result) => {
                     if (err) {
                         console.error("Erreur d'inscription :", err.message);

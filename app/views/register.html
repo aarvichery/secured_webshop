@@ -43,9 +43,24 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="address">Adresse</label>
-                    <input type="text" id="address" name="address" placeholder="Avenue des paquerettes 1" required>
-                </div>
+    <label for="address">Adresse</label>
+    <input type="text" id="address" name="address" placeholder="Avenue des paquerettes" required>
+</div>
+
+<div class="input-row">
+    <div class="input-group sm">
+        <label for="nb_street">N°</label>
+        <input type="text" id="nb_street" name="nb_street" placeholder="1" required>
+    </div>
+    <div class="input-group md">
+        <label for="zip">NPA</label>
+        <input type="text" id="zip" name="zip" placeholder="1000" required>
+    </div>
+    <div class="input-group">
+        <label for="city">Ville</label>
+        <input type="text" id="city" name="city" placeholder="Lausanne" required>
+    </div>
+</div>
 
                 <button type="submit" class="btn-primary">Se connecter</button>
             </form>
@@ -210,6 +225,42 @@ h1 {
 
 .btn-primary:hover {
     background-color: #000;
+}
+
+/* --- Alignement des champs d'adresse --- */
+
+/* La ligne qui contient les 3 petits champs */
+.input-row {
+    display: flex;
+    gap: 12px; /* Espace entre les colonnes */
+    margin-bottom: 20px;
+}
+
+/* On réinitialise la marge du groupe pour que la ligne gère l'espacement */
+.input-row .input-group {
+    margin-bottom: 0;
+    flex: 1; /* Par défaut, ils prennent la place restante (Ville) */
+}
+
+/* Largeur spécifique pour le numéro de rue (Petit) */
+.input-group.sm {
+    flex: 0 0 60px; 
+}
+
+/* Largeur spécifique pour le NPA (Moyen) */
+.input-group.md {
+    flex: 0 0 100px;
+}
+
+/* Ajustement pour les petits écrans (Mobile) */
+@media (max-width: 400px) {
+    .input-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .input-group.sm, .input-group.md {
+        flex: 1;
+    }
 }
 
 /* --- Section S'inscrire --- */
