@@ -30,6 +30,35 @@ module.exports = {
     // ----------------------------------------------------------
     // POST /api/auth/register
     // ----------------------------------------------------------
-    register: (_req, res) => {
+    register: (req, res) => {
+        const { email, password, username, address } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email et mot de passe requis' });
+        }
+
+        const query = `SELECT * FROM users WHERE email = '${email}'`;
+
+        db.query(query, (err, results) => {
+            if (err) {
+                return res.status(500).json({ error: err.message, query: query });
+            }
+
+            if (results.length > 0) {
+                return res.status(401).json({ error: 'Email déjà utilisé' });
+            }
+
+            if (results.length === 0) {
+                const search = `INSERT INTO users (username, email, password, role, address, photo_path) VALUES ('${username}', '${email}', '${password}', 'user', '${address}', NULL)`;
+                db.query(search, (err, result) => {
+                    if (err) {
+                        console.error("Erreur d'inscription :", err.message);
+                        return res.status(500).send("Erreur lors de la création du compte.");
+                    }
+
+                    res.redirect('/');
+                })
+            }
+        });
     }
 };
