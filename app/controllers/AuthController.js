@@ -23,7 +23,7 @@ module.exports = {
                 return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
 
-            res.json({ message: 'Connexion réussie', user: results[0] });
+            res.redirect('/');
         });
     },
 
@@ -31,6 +31,5 @@ module.exports = {
     // POST /api/auth/register
     // ----------------------------------------------------------
     register: (_req, res) => {
-        res.status(501).json({ error: 'Non implémenté — TODO exercice 7' });
     }
 };
