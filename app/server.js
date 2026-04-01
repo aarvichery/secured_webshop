@@ -1,12 +1,15 @@
 require('dotenv').config({ path: '../.env' });
 
 const express = require("express");
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const path = require("path");
 
 const app = express();
 
 // Middleware pour parser le corps des requêtes
 app.use(express.json());
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 // Fichiers statiques (CSS, images, uploads...)

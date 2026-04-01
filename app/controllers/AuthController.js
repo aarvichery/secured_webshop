@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 
@@ -32,6 +33,22 @@ module.exports = {
                 return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
 
+            const token = jwt.sign({
+                id: user.id,
+                role: user.role
+            },
+            process.env.JWT_SECRET,
+            {expiresIn: '24h'});
+
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: false,
+                maxAge: 24 * 60 * 60 * 1000
+            })
+
+            console.log(user.id);
+            console.log(user.username);
+            console.log(user.role);
             res.redirect('/');
         });
     },
