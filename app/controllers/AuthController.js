@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const bcrypt = require('bcryptjs');
 
 
 module.exports = {
@@ -32,7 +33,7 @@ module.exports = {
     // POST /api/auth/register
     // ----------------------------------------------------------
     register: (req, res) => {
-        const { email, password, username, address, nb_street, zip, city } = req.body;
+        const { email, password, confirmPassword, username, address, nb_street, zip, city } = req.body;
         const fulladdress = `${nb_street} ${address}, ${zip} ${city}`
 
         if (!email || !password) {
@@ -41,7 +42,7 @@ module.exports = {
 
         const query = `SELECT * FROM users WHERE email = ? OR username = ?`;
 
-        db.query(query, [email, username], (err, results) => {
+        db.query(query, [email, username], async (err, results) => {
             if (err) {
                 return res.status(500).json({ error: err.message, query: query });
             }
@@ -50,16 +51,25 @@ module.exports = {
                 return res.status(401).json({ error: `Email ou nom d'utilisateur déjà utilisé` });
             }
 
-            if (results.length === 0) {
-                const search = `INSERT INTO users (username, email, password, role, address, photo_path) VALUES (?, ?, ?, ?, ?, ?)`;
-                db.query(search, [username, email, password, 'user', address, null ] ,(err, result) => {
-                    if (err) {
-                        console.error("Erreur d'inscription :", err.message);
-                        return res.status(500).send("Erreur lors de la création du compte.");
-                    }
+            if(password == confirmPassword)
+            {
+                const hashedPassword = await bcrypt.hash(password, 10);
 
-                    res.redirect('/');
-                })
+                if (results.length === 0) {
+                    const search = `INSERT INTO users (username, email, password, role, address, photo_path) VALUES (?, ?, ?, ?, ?, ?)`;
+                    db.query(search, [username, email, hashedPassword, 'user', address, null ] ,(err, result) => {
+                        if (err) {
+                            console.error("Erreur d'inscription :", err.message);
+                            return res.status(500).send("Erreur lors de la création du compte.");
+                        }
+
+                        res.redirect('/');
+                    })
+                }
+            }
+            else
+            {
+                console.log('not ok')
             }
         });
     }
