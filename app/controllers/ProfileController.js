@@ -1,16 +1,14 @@
 const path = require('path');
 const db = require('../config/db');
 
-const DEFAULT_USER_ID = 1;
-
 module.exports = {
 
     // ----------------------------------------------------------
     // GET /api/profile
     // ----------------------------------------------------------
-    get: (_req, res) => {
-        const userId = DEFAULT_USER_ID;
-
+    get: (req, res) => {
+        const userId = req.user.id;
+        console.log(req.user)
         db.query('SELECT id, username, email, role, address, photo_path FROM users WHERE id = ?', [userId], (err, results) => {
             if (err) {
                 return res.status(500).json({ error: 'Erreur serveur' });

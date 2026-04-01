@@ -7,7 +7,18 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <div id="topbar"></div>
+    <header class="topbar">
+            <div class="container">
+                <div class="brand">Secure Shop</div>
+                <nav class="menu">
+                    <a href="/">Accueil</a>
+                    <a href="/profile">Profil</a>
+                    <a href="/admin">Admin</a>
+                    <a href="/login">Connexion</a>
+                    <a href="/register">Inscription</a>
+                </nav>
+            </div>
+        </header>
 
     <main>
         <section class="hero">
@@ -26,7 +37,7 @@
 
                 <!-- Informations de base -->
                 <div id="user-info">
-                    <div class="info-row"><strong>Nom :</strong> <span id="username">...</span></div>
+                    <div class="info-row"><strong>Nom :</strong> <span id="username"></span></div>
                     <div class="info-row"><strong>Email :</strong> <span id="email">...</span></div>
                     <div class="info-row"><strong>Rôle :</strong> <span id="role">...</span></div>
                 </div>
