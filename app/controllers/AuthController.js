@@ -21,14 +21,11 @@ module.exports = {
                 return res.status(500).json({ error: err.message, query: query });
             }
 
-            const user = results[0]; // On récupère l'utilisateur trouvé
+            const user = results[0];
 
-        // 3. ON PRÉPARE LE POIVRE (comme au register)
         const pepper = process.env.PASSWORD_PEPPER;
         const passwordWithPepper = password + pepper;
 
-        // 4. ON COMPARE (Le moment magique)
-        // Bcrypt va extraire le sel tout seul du user.password (le hash en base)
         const isMatch = await bcrypt.compare(passwordWithPepper, user.password);
 
             if (!isMatch) {
