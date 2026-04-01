@@ -14,14 +14,24 @@ module.exports = {
             return res.status(400).json({ error: 'Email et mot de passe requis'});
         }
 
-        const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
+        const query = `SELECT * FROM users WHERE email = ?`;
 
-        db.query(query, [email, password], (err, results) => {
+        db.query(query, [email], async (err, results) => {
             if (err) {
                 return res.status(500).json({ error: err.message, query: query });
             }
 
-            if (results.length === 0) {
+            const user = results[0]; // On récupère l'utilisateur trouvé
+
+        // 3. ON PRÉPARE LE POIVRE (comme au register)
+        const pepper = process.env.PASSWORD_PEPPER;
+        const passwordWithPepper = password + pepper;
+
+        // 4. ON COMPARE (Le moment magique)
+        // Bcrypt va extraire le sel tout seul du user.password (le hash en base)
+        const isMatch = await bcrypt.compare(passwordWithPepper, user.password);
+
+            if (!isMatch) {
                 return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
 
@@ -53,11 +63,14 @@ module.exports = {
 
             if(password == confirmPassword)
             {
-                const hashedPassword = await bcrypt.hash(password, 10);
+                const pepper = process.env.PASSWORD_PEPPER;
+                const salt = await bcrypt.genSalt(10);
+                const passwordwithpepper = password + pepper
+                const hashedPassword = await bcrypt.hash(passwordwithpepper, salt);
 
                 if (results.length === 0) {
                     const search = `INSERT INTO users (username, email, password, role, address, photo_path) VALUES (?, ?, ?, ?, ?, ?)`;
-                    db.query(search, [username, email, hashedPassword, 'user', address, null ] ,(err, result) => {
+                    db.query(search, [username, email, hashedPassword, 'user', `${nb_street} ${address}, ${zip} ${city}`, null ] ,(err, result) => {
                         if (err) {
                             console.error("Erreur d'inscription :", err.message);
                             return res.status(500).send("Erreur lors de la création du compte.");
