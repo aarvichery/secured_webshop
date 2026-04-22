@@ -9,6 +9,12 @@ module.exports = {
     // POST /api/auth/login
     // ----------------------------------------------------------
     login: (req, res) => {
+        res.cookie('token', token, {
+    httpOnly: true, // Empêche le vol de cookie par script JS
+    secure: true,   // OBLIGATOIRE pour HTTPS : le cookie ne circule que sur du chiffré
+    sameSite: 'strict',
+    maxAge: 3600000 // 1 heure
+});
         const { email, password } = req.body;
 
         if (!email || !password) {

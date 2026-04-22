@@ -4,8 +4,15 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const path = require("path");
+const https = require('https');
+const fs = require('fs');
 
 const app = express();
+
+// Middlewares
+
+const auth = require('./middleware/auth');
+const admin = require('./middleware/admin');
 
 // Middleware pour parser le corps des requêtes
 app.use(express.json());
@@ -44,12 +51,17 @@ app.get("/register", (_req, res) =>
 app.get("/profile", (_req, res) =>
   res.sendFile(path.join(__dirname, "views", "profile.html")),
 );
-app.get("/admin", (_req, res) =>
+app.get("/admin", auth, admin, (_req, res) =>
   res.sendFile(path.join(__dirname, "views", "admin.html")),
 );
 
-// Démarrage du serveur
-app.get("/test", (_req, res) => res.send("db admin: root, pwd : root"));
-app.listen(8080, () => {
-  console.log("Serveur démarré sur http://localhost:8080");
+const options = {
+  key: fs.readFileSync(path.join(__dirname, 'localhost-key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'localhost.pem'))
+};
+
+// Création le serveur HTTPS
+const PORT = 8080;
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Serveur sécurisé démarré sur https://localhost:${PORT}`);
 });
