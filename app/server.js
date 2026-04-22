@@ -50,6 +50,6 @@ app.get("/admin", (_req, res) =>
 
 // Démarrage du serveur
 app.get("/test", (_req, res) => res.send("db admin: root, pwd : root"));
-app.listen(3000, () => {
+app.listen(8080, () => {
   console.log("Serveur démarré sur http://localhost:8080");
 });
