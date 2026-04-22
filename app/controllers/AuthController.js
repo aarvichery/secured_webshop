@@ -9,12 +9,6 @@ module.exports = {
     // POST /api/auth/login
     // ----------------------------------------------------------
     login: (req, res) => {
-        res.cookie('token', token, {
-    httpOnly: true, // Empêche le vol de cookie par script JS
-    secure: true,   // OBLIGATOIRE pour HTTPS : le cookie ne circule que sur du chiffré
-    sameSite: 'strict',
-    maxAge: 3600000 // 1 heure
-});
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -45,12 +39,23 @@ module.exports = {
                 role: user.role
             },
             process.env.JWT_SECRET,
-            {expiresIn: '24h'});
+            {expiresIn: '10s'});
 
-            res.cookie('token', token, {
+            res.cookie('accessToken', token, {
                 httpOnly: true,
-                secure: false,
-                maxAge: 24 * 60 * 60 * 1000
+                secure: true,
+            })
+
+            const refreshToken = jwt.sign({
+                id: user.id,
+                user: user.username,
+                role: user.role
+            }, process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '24h' });
+
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: true,
             })
 
             console.log(user.id);
@@ -59,6 +64,23 @@ module.exports = {
             res.redirect('/');
         });
     },
+
+    refresh: (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    // Si pas de token de rechange
+    if (!refreshToken) return res.status(401).send('Accès refusé');
+    // Si invalide
+    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
+        if (err) return res.status(403).send('Token invalide');
+
+        // Générer un nouvel Access Token
+        const newAccessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+        // accessToken = newAccessToken
+        res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true });
+        res.json({ message: "Token rafraîchi" });
+    });
+},
 
     // ----------------------------------------------------------
     // POST /api/auth/register

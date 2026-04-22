@@ -1,9 +1,8 @@
-require("dotenv").config({ path: "../.env" });
-
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const path = require("path");
 const https = require('https');
 const fs = require('fs');
 
