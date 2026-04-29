@@ -1,7 +1,8 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+const { loginLimiter } = require('../routes/Auth');
+let error = 0
 
 module.exports = {
 
@@ -10,6 +11,8 @@ module.exports = {
     // ----------------------------------------------------------
     login: (req, res) => {
         const { email, password } = req.body;
+
+        
 
         if (!email || !password) {
             return res.status(400).json({ error: 'Email et mot de passe requis'});
@@ -25,6 +28,8 @@ module.exports = {
             const user = results[0];
 
             if (!user) {
+                error++
+                console.log(error);
                 return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
 
@@ -34,6 +39,8 @@ module.exports = {
         const isMatch = await bcrypt.compare(passwordWithPepper, user.password);
 
             if (!isMatch) {
+                error++
+                loginLimiter.resetKey(req.ip);
                 return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
 
@@ -66,6 +73,8 @@ module.exports = {
             console.log(user.username);
             console.log(user.role);
             res.redirect('/');
+
+
         });
     },
 
