@@ -41,6 +41,27 @@
                     <label for="password">Mot de passe</label>
                     <input type="password" id="password" name="password" placeholder="••••••••">
                 </div>
+                <ul>
+                    <p>Le  mot de passe doit contenir au moins</p>
+                    <li>
+                        Une Minuscule
+                    </li>
+                    <li>
+                        Une Majuscule
+                    </li>
+                    <li>
+                        Un caractère spécial
+                    </li>
+                    <li>
+                        Au  moins 8 caractères
+                    </li>
+                </ul>
+                <div class="strength-bar-container">
+    <div id="strength-bar"></div>
+    </div>
+        <p id="strength-text" style="font-weight: 600; margin-top: 5px; display: block;"></p>
+
+    <br>
 
                 <div class="input-group">
                     <label for="confirmPassword">Confirmez le mot de passe</label>
@@ -82,7 +103,46 @@
 
 </body>
 </html>
+<script>
+    const passwordInput = document.getElementById('password');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
 
+    passwordInput.addEventListener('input', () => {
+        const mdp = passwordInput.value;
+        let score = 0;
+
+        if(mdp.length >= 8) score += 20;
+
+        if(/[A-Z]/.test(mdp)) score += 20;
+
+        if(/[a-z]/.test(mdp)) score += 20;
+
+        if(/\d/.test(mdp)) score += 20;
+
+        if(/[@$!%*?&-]/.test(mdp)) score += 20;
+
+        // Mise a jour de la barre
+        strengthBar.style.width = score + "%";
+
+        // Gestion des couleurs et du TEXTE
+        if (score === 0) {
+            strengthText.innerText = ""; 
+        } else if (score <= 20) {
+            strengthBar.style.backgroundColor = "#ff4d4d"; // Rouge
+            strengthText.innerText = "Faible";
+            strengthText.style.color = "#ff4d4d";
+        } else if (score <= 60) {
+            strengthBar.style.backgroundColor = "orange";
+            strengthText.innerText = "Moyenne";
+            strengthText.style.color = "orange";
+        } else {
+            strengthBar.style.backgroundColor = "green";
+            strengthText.innerText = "Excellente";
+            strengthText.style.color = "green";
+        }
+    })
+</script>
 <style>
 /* --- Variables de couleurs --- */
 :root {
@@ -230,6 +290,28 @@ h1 {
 
 .btn-primary:hover {
     background-color: #000;
+}
+
+/* Barre mot de passe fort */
+.strength-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #eee;
+    margin-top: 5px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s orange, background-color 0.3s;
+}
+
+#strength-text {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    font-family: sans-serif;
 }
 
 /* --- Alignement des champs d'adresse --- */
