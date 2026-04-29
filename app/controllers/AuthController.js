@@ -24,6 +24,10 @@ module.exports = {
 
             const user = results[0];
 
+            if (!user) {
+                return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
+            }
+
         const pepper = process.env.PASSWORD_PEPPER;
         const passwordWithPepper = password + pepper;
 
@@ -39,7 +43,7 @@ module.exports = {
                 role: user.role
             },
             process.env.JWT_SECRET,
-            {expiresIn: '10s'});
+            {expiresIn: '10m'});
 
             res.cookie('accessToken', token, {
                 httpOnly: true,
@@ -68,7 +72,8 @@ module.exports = {
     refresh: (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     // Si pas de token de rechange
-    if (!refreshToken) return res.status(401).send('Accès refusé');
+    if (!refreshToken) return res.status(401).send('Authentification requise');
+
     // Si invalide
     jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
         if (err) return res.status(403).send('Token invalide');
@@ -89,29 +94,14 @@ module.exports = {
         const { email, password, confirmPassword, username, address, nb_street, zip, city } = req.body;
         const fulladdress = `${nb_street} ${address}, ${zip} ${city}`
         const emailLower = email.toLowerCase();
-        let score = 0;
-
-        if(password.length >= 8) score += 20;
-        else{return res.status(400).json({ error: 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial, et au minimum 8 caractères'})}
-
-        if(/[A-Z]/.test(password)) score += 20;
-        else{return res.status(400).json({ error: 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial, et au minimum 8 caractères'})}
-
-        if(/[a-z]/.test(password)) score += 20;
-        else{return res.status(400).json({ error: 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial, et au minimum 8 caractères'})}
-
-        if(/\d/.test(password)) score += 20;
-        else{return res.status(400).json({ error: 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial, et au minimum 8 caractères'})}
-
-        if(/[@$!%*?&-]/.test(password)) score += 20;
-        else{return res.status(400).json({ error: 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial, et au minimum 8 caractères'})}
+        
 
         if (!email || !password) {
-            return res.status(400).json({ error: 'Email et mot de passe requis' });
+            return res.status(401).json({ error: 'Email et mot de passe requis' });
         }
 
         if (password != confirmPassword) {
-            return res.status(400).json({ error: "Vos mots de passes ne sont pas les mêmes" });
+            return res.status(401).json({ error: "Vos mots de passes ne sont pas les mêmes" });
         }
 
         const query = `SELECT * FROM users WHERE email = ? OR username = ?`;
@@ -122,7 +112,7 @@ module.exports = {
             }
 
             if (results.length > 0) {
-                return res.status(401).json({ error: `Email ou nom d'utilisateur déjà utilisé` });
+                return res.status(409).json({ error: `Email ou nom d'utilisateur déjà utilisé` });
             }
 
             if(password == confirmPassword)
