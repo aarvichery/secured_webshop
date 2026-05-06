@@ -9,3 +9,5 @@
 /app/public/uploads/*.gif
 /app/public/uploads/*.webp
 .env
+localhost.pem
+localhost-key.pem

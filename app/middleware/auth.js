@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
             // Si le token n'existe plus
             if (!refreshToken) return res.redirect('/login');
 
-            // RefreshDecoded correspond à l'objet contenu dans le token, RefreshErr est les erreurs du token
+            // RefreshDecoded correspond à l'objet contenu dans le token, RefreshErr sont les erreurs du token
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (refreshErr, refreshDecoded) => {
                 if (refreshErr) return res.redirect('/login');
 
@@ -25,7 +25,7 @@ module.exports = (req, res, next) => {
                 const newAccessToken = jwt.sign(
                     { id: refreshDecoded.id, user: refreshDecoded.user, role: refreshDecoded.role },
                     process.env.JWT_SECRET,
-                    { expiresIn: '10s' }
+                    { expiresIn: '10m' }
                 );
 
                 // accessToken = newAccessToken

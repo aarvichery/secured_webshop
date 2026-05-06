@@ -50,7 +50,7 @@ module.exports = {
                 role: user.role
             },
             process.env.JWT_SECRET,
-            {expiresIn: '10m'});
+            {expiresIn: '1m'});
 
             res.cookie('accessToken', token, {
                 httpOnly: true,
@@ -77,24 +77,6 @@ module.exports = {
 
         });
     },
-
-    refresh: (req, res) => {
-    const refreshToken = req.cookies.refreshToken;
-    // Si pas de token de rechange
-    if (!refreshToken) return res.status(401).send('Authentification requise');
-
-    // Si invalide
-    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
-        if (err) return res.status(403).send('Token invalide');
-
-        // Générer un nouvel Access Token
-        const newAccessToken = jwt.sign({ id: user.id, user: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '15m' });
-
-        // accessToken = newAccessToken
-        res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true });
-        res.json({ message: "Token rafraîchi" });
-    });
-},
 
     // ----------------------------------------------------------
     // POST /api/auth/register
