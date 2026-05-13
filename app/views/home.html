@@ -12,10 +12,11 @@
             <div class="logo">Secure Shop</div>
             <nav class="nav-links">
                 <a href="/"  class="active">Accueil</a>
-                    <a href="/profile">Profil</a>
-                    <a href="/admin">Admin</a>
-                    <a href="/login">Connexion</a>
-                    <a href="/register">Inscription</a>
+                <a href="/profile" class="auth-only">Profil</a>
+                <a href="/admin" class="auth-only">Admin</a>
+                <a href="/login" class="guest-only">Connexion</a>
+                <a href="/register" class="guest-only">Inscription</a>
+                <a href="/register" class="auth-only">Deconnexion</a>
             </nav>
         </div>
     </header>
@@ -59,10 +60,27 @@
         </div>
     </footer>
 
-    <script src="/js/nav.js"></script>
 </body>
 </html>
 
+<script>
+    const isLoggedIn = localStorage.getItem('userToken') !== null;
+
+    function updateMenu() {
+        const authLinks = document.querySelectorAll('.guest-only');
+        const guestLinks = document.querySelectorAll('.auth-only');
+
+        if (isLoggedIn) {
+            authLinks.forEach(el => el.style.display = 'inline-block');
+            guestLinks.forEach(el => el.style.display = 'none');
+        } else {
+            authLinks.forEach(el => el.style.display = 'none');
+            guestLinks.forEach(el => el.style.display = 'inline-block');
+        }
+    }
+
+    updateMenu();
+</script>
 <style>
 /* --- Variables de couleurs --- */
 :root {
