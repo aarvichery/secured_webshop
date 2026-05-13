@@ -40,7 +40,6 @@ module.exports = {
 
             if (!isMatch) {
                 error++
-                loginLimiter.resetKey(req.ip);
                 return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
 
@@ -72,6 +71,7 @@ module.exports = {
             console.log(user.id);
             console.log(user.username);
             console.log(user.role);
+            loginLimiter.resetKey(req.ip);
             res.redirect('/');
 
 
