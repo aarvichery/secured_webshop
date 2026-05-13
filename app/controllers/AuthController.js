@@ -1,7 +1,7 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { loginLimiter } = require('../routes/Auth');
+const loginLimiter = require('../middleware/limiter');
 let error = 0
 
 module.exports = {
