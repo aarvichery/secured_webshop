@@ -16,7 +16,7 @@
                 <a href="/admin" class="auth-only">Admin</a>
                 <a href="/login" class="guest-only">Connexion</a>
                 <a href="/register" class="guest-only">Inscription</a>
-                <a href="/register" class="auth-only">Deconnexion</a>
+                <a href="/logout" class="auth-only">Deconnexion</a>
             </nav>
         </div>
     </header>
@@ -64,18 +64,18 @@
 </html>
 
 <script>
-    const isLoggedIn = localStorage.getItem('userToken') !== null;
+    const isLoggedIn = localStorage.getItem('accessToken') !== null;
 
     function updateMenu() {
         const authLinks = document.querySelectorAll('.guest-only');
         const guestLinks = document.querySelectorAll('.auth-only');
 
         if (isLoggedIn) {
-            authLinks.forEach(el => el.style.display = 'inline-block');
-            guestLinks.forEach(el => el.style.display = 'none');
+            authLinks.forEach(item => item.style.display = 'inline-block');
+            guestLinks.forEach(item => item.style.display = 'none');
         } else {
-            authLinks.forEach(el => el.style.display = 'none');
-            guestLinks.forEach(el => el.style.display = 'inline-block');
+            authLinks.forEach(item => item.style.display = 'none');
+            guestLinks.forEach(item => item.style.display = 'inline-block');
         }
     }
 

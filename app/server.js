@@ -37,6 +37,7 @@ app.use("/api/admin", adminRoute);
 // ---------------------------------------------------------------
 const homeRoute = require("./routes/Home");
 const userRoute = require("./routes/User");
+const router = require("./routes/Auth");
 
 app.use("/", homeRoute);
 app.use("/user", userRoute);
@@ -47,6 +48,9 @@ app.get("/login", (_req, res) =>
 app.get("/register", (_req, res) =>
   res.sendFile(path.join(__dirname, "views", "register.html")),
 );
+app.get("/logout", (req, res) => {
+  res.redirect("/login");
+});
 app.get("/profile", (_req, res) =>
   res.sendFile(path.join(__dirname, "views", "profile.html")),
 );

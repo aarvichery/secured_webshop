@@ -2,6 +2,7 @@ const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const loginLimiter = require('../middleware/limiter');
+const router = require('../routes/Profile');
 let error = 0
 
 module.exports = {
@@ -130,5 +131,13 @@ module.exports = {
                 console.log('not ok')
             }
         });
-    }
-};
+    },
+
+    // ----------------------------------------------------------
+    // POST /api/auth/logout
+    // ----------------------------------------------------------
+    logout: (req, res) => {
+        res.cookie("accessToken", null)
+        console.log("oui")
+  }
+}
